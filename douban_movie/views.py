@@ -6,4 +6,5 @@ from douban_movie.models import DoubanMovie
 
 def test(request):
 
+
 	return HttpResponse("Hello, world. You're at the polls index.")
