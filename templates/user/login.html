@@ -1,0 +1,30 @@
+{% extends 'user/template.html' %}
+
+{% block title %}用户登录{% endblock %}
+
+{% block head %}
+	{{ block.super }}
+	{% load staticfiles %}
+	<script type="text/javascript" src="{% static 'js/user/login.js' %}"></script>
+	
+{% endblock %}
+
+{% block form %}
+	<form id="login_form" action="" onsubmit="function(){return false}">
+		{% csrf_token %}
+		<div class="form-group row">
+			<input type="text" name="username_email" placeholder="请输入用户名或邮箱" require autocomplete="off" class="form-control">
+		</div>
+		<div class="form-group row">
+			<input type="hidden" name="password">
+			<input type="password" id="password_" placeholder="请输入密码" autocomplete="off" class="form-control">
+		</div>
+		<div class="form-group row justify-content-end">
+			<a href="{% url 'user:to_register' %}">没有账号，注册</a>
+		</div>
+
+		<div class="row justify-content-center">
+			<button type="button" class="btn btn-primary col-md-4" onclick="login()">登录</button>	
+		</div>
+	</form>
+{% endblock %}

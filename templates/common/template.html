@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>{% block title %}{% endblock %}</title>
+	{% load staticfiles %}
+	<link rel="stylesheet" type="text/css" href="{% static 'css/common/bootstrap/bootstrap.min.css' %}">
+	<link rel="stylesheet" type="text/css" href="{% static 'css/common/bootstrap/bootstrap-submenu.min.css' %}">
+	<link rel="stylesheet" type="text/css" href="{% static 'css/common/bootstrap/open-iconic-bootstrap.css' %}">
+
+	<script type="text/javascript" src="{% static 'js/common/jquery.min.js' %}"></script>
+	<script type="text/javascript" src="{% static 'js/common/popper.min.js' %}"></script>
+	<script type="text/javascript" src="{% static 'js/common/bootstrap/bootstrap.min.js' %}"></script>
+	<script type="text/javascript" src="{% static 'js/common/bootstrap/bootstrap-submenu.min.js' %}"></script>
+	<script type="text/javascript" src="{% static 'js/common/navigation.js' %}"></script>
+	<script type="text/javascript" src="{% static 'js/common/modal.js' %}"></script>
+	<script type="text/javascript" src="{% static 'js/common/template-web.js' %}"></script>
+	
+
+	{% block head %}{% endblock %}
+
+
+</head>
+<body>
+
+		
+	{% include "common/header.html" %}
+	{% include "common/navigation.html" %}
+
+
+	{% block body %}{% endblock %}
+
+	{% include "common/modal.html" %}
+
+	<script type="text/javascript">
+
+		var url_map = {
+			{% for navigation_url in navigation_urls %}
+				'{{navigation_url}}' : '{% url navigation_url %}',
+			{% endfor %}
+		}
+		function load_navigation(){
+			$.ajax({
+				async : true,
+				type : 'get',
+				url : "{% url 'navigation:get_navigation' %}",
+				dataType : 'json',
+				success : function(data){
+					
+					var nav_html = template('generate_nav', {'nodes':data, 'url_map':url_map});
+					$('#navigation').append(nav_html);
+					$('[data-submenu]').submenupicker();
+				}
+			})
+		}
+
+		$(function () {
+			load_navigation();
+		});
+	</script>
+
+</body>
+</html>

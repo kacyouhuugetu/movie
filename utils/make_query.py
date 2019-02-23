@@ -40,6 +40,9 @@ def make_page(model, filter_by=None, order_by=None, limit=20, page=1):
 
 		selector = selector.order_by(*order_by_args)
 
+	if not filter_by and not order_by:
+		selector = selector.all()
+
 	# 开启分页
 	if page and limit:
 		page, limit = int(page), int(limit)

@@ -1,0 +1,45 @@
+{% extends 'user/template.html' %}
+
+{% block title %}用户注册{% endblock %}
+
+{% block head %}
+	{{ block.super }}
+	{% load staticfiles %}
+	<script type="text/javascript" src="{% static 'js/user/register.js' %}"></script>
+	
+{% endblock %}
+
+{% block form %}
+
+
+	<form id="register_form" action="" onsubmit="function(){return false}">
+		{% csrf_token %}
+		<div class="form-group row">
+			<label class="col-md-3 col-form-label"><span style="color: red">*</span>用户名</label>
+			<div class="col-md-9">
+				<input type="text" name="username" placeholder="请输入用户名" require autocomplete="off" class="form-control">
+			</div>
+		</div>
+		<div class="form-group row">
+			<label class="col-md-3 col-form-label"><span style="color: red">*</span>密码</label>
+			<div class="col-md-9">
+				<input type="hidden" name="password">
+				<input type="password" id="password_" placeholder="请输入密码" autocomplete="off" class="form-control">
+			</div>
+		</div>
+		<div class="form-group row">
+			<label class="col-md-3 col-form-label">电子邮箱</label>
+			<div class="col-md-9">
+				<input type="email" name="email" placeholder="请输入电子邮箱" autocomplete="off" class="form-control">
+			</div>
+		</div>
+		<div class="form-group row justify-content-end">
+			<a href="{% url 'user:to_login' %}">已有账号，登录</a>
+		</div>
+
+		<div class="row justify-content-center">
+			<button type="button" class="btn btn-primary col-md-4" onclick="register()">注册</button>
+		</div>
+		
+	</form>
+{% endblock %}

@@ -1,0 +1,34 @@
+<script type="text/html" id="generate_dropmenu">
+	<%	for(var node_index in nodes){ %>
+	<%		if(nodes[node_index].children){ %>
+				<div class="dropdown dropright dropdown-submenu">
+					<button class="dropdown-item dropdown-toggle" type="button" data-toggle="dropdown"><%= nodes[node_index].name %></button>
+					<div class="dropdown-menu">
+	<%					include('generate_dropmenu', {'nodes': nodes[node_index].children, 'url_map':url_map}) %>
+					</div>
+				</div>
+	<%		}else{ %>
+				<a class="dropdown-item" href="<%= nodes[node_index].url?url_map[nodes[node_index].url]:'#' %>"><%= nodes[node_index].name %></a>
+	<%		} %>
+	<%	} %>
+
+
+</script>
+
+
+<script type="text/html" id="generate_nav">
+	<%	for(var node_index in nodes){ %>
+	<%		if(nodes[node_index].children){ %>
+				<li class="nav-item dropdown">
+					<a class="nav-link dropdown-toggle" href="<%= nodes[node_index].url?url_map[nodes[node_index].url]:'#' %>" id="navbarDropdown" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true" data-submenu><%= nodes[node_index].name %></a>
+					<div class="dropdown-menu">
+	<%					include('generate_dropmenu', {'nodes': nodes[node_index].children, 'url_map':url_map}) %>
+					</div>
+				</li>
+	<%		}else{ %>
+				<li class="nav-item">
+					<a class="nav-link" href="<%= nodes[node_index].url?url_map[nodes[node_index].url]:'#' %>"><%= nodes[node_index].name %></a>
+				</li>
+	<%		} %>
+	<%	} %>
+</script>
