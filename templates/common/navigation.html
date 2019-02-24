@@ -2,7 +2,7 @@
 	<%	for(var node_index in nodes){ %>
 	<%		if(nodes[node_index].children){ %>
 				<div class="dropdown dropright dropdown-submenu">
-					<button class="dropdown-item dropdown-toggle" type="button" data-toggle="dropdown"><%= nodes[node_index].name %></button>
+					<button class="dropdown-item dropdown-toggle" type="button" data-toggle="dropdown" data-hover="dropdown"><%= nodes[node_index].name %></button>
 					<div class="dropdown-menu">
 	<%					include('generate_dropmenu', {'nodes': nodes[node_index].children, 'url_map':url_map}) %>
 					</div>
@@ -20,7 +20,7 @@
 	<%	for(var node_index in nodes){ %>
 	<%		if(nodes[node_index].children){ %>
 				<li class="nav-item dropdown">
-					<a class="nav-link dropdown-toggle" href="<%= nodes[node_index].url?url_map[nodes[node_index].url]:'#' %>" id="navbarDropdown" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true" data-submenu><%= nodes[node_index].name %></a>
+					<a class="nav-link dropdown-toggle" href="<%= nodes[node_index].url?url_map[nodes[node_index].url]:'#' %>" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true" data-hover="dropdown"><%= nodes[node_index].name %></a>
 					<div class="dropdown-menu">
 	<%					include('generate_dropmenu', {'nodes': nodes[node_index].children, 'url_map':url_map}) %>
 					</div>

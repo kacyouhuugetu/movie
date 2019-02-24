@@ -11,10 +11,11 @@
 	<script type="text/javascript" src="{% static 'js/common/popper.min.js' %}"></script>
 	<script type="text/javascript" src="{% static 'js/common/bootstrap/bootstrap.min.js' %}"></script>
 	<script type="text/javascript" src="{% static 'js/common/bootstrap/bootstrap-submenu.min.js' %}"></script>
+	<script type="text/javascript" src="{% static 'js/common/bootstrap/bootstrap-hover-dropdown.js' %}"></script>
 	<script type="text/javascript" src="{% static 'js/common/navigation.js' %}"></script>
 	<script type="text/javascript" src="{% static 'js/common/modal.js' %}"></script>
 	<script type="text/javascript" src="{% static 'js/common/template-web.js' %}"></script>
-	
+
 
 	{% block head %}{% endblock %}
 
@@ -49,8 +50,20 @@
 					var nav_html = template('generate_nav', {'nodes':data, 'url_map':url_map});
 					$('#navigation').append(nav_html);
 					$('[data-submenu]').submenupicker();
+
+					load_dropdownhover();
 				}
 			})
+		}
+
+		function load_dropdownhover(){
+			$('[data-hover="dropdown"]').dropdownHover({
+				delay :200
+			});
+		}
+
+		function get_navigation_url(url_name){
+			return url_map[url_name];
 		}
 
 		$(function () {
