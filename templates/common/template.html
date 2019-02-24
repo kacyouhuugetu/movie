@@ -5,7 +5,8 @@
 	{% load staticfiles %}
 	<link rel="stylesheet" type="text/css" href="{% static 'css/common/bootstrap/bootstrap.min.css' %}">
 	<link rel="stylesheet" type="text/css" href="{% static 'css/common/bootstrap/bootstrap-submenu.min.css' %}">
-	<link rel="stylesheet" type="text/css" href="{% static 'css/common/bootstrap/open-iconic-bootstrap.css' %}">
+	<link rel="stylesheet" type="text/css" href="{% static 'css/common/open-iconic-bootstrap.css' %}">
+	<link rel="stylesheet" type="text/css" href="{% static 'css/common/ionicons.css' %}">
 
 	<script type="text/javascript" src="{% static 'js/common/jquery.min.js' %}"></script>
 	<script type="text/javascript" src="{% static 'js/common/popper.min.js' %}"></script>
@@ -26,7 +27,6 @@
 		
 	{% include "common/header.html" %}
 	{% include "common/navigation.html" %}
-
 
 	{% block body %}{% endblock %}
 
