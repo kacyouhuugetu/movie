@@ -7,7 +7,7 @@ def navigation(request):
 	"""
 
 	urls = []
-	for navigation in Navigation.make_page(page=None):
+	for navigation in Navigation.make_page(page=None)[1]:
 		if navigation.url:
 			urls.append(navigation.url)
 

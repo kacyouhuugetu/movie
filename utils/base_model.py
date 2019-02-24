@@ -52,7 +52,7 @@ class BaseModel:
 
 
 	@classmethod
-	def make_page(model, filter_by=None, order_by=None, limit=20, page=1):	
+	def make_page(model, filter_by=None, order_by=None, limit=20, page=1, compute_count=False):	
 		"""
 			以模型DoubanMovie为例，获取满足条件的影片QuerySet
 			
@@ -66,10 +66,16 @@ class BaseModel:
 					整数。用于分页，与参数page一起使用，表示每一页的大小。若limit为None，则不开启分页。默认为20
 				:page
 					整数。用于分页，与参数limit一起使用，表示页码。若page为None，则不开启分页。默认为1
+				:compute_count
+					布尔值。是否计算数据量
+
 			
 			返回值
 			_______
-				表示结果集的QuerySet
+				:count
+					经过筛选后的数据量（与是否开启分页无关）。若compute_count为False，则该返回值为0
+				:data
+					表示结果集的QuerySet
 
 			示例
 			_______
@@ -80,7 +86,7 @@ class BaseModel:
 
 		"""
 
-		return make_page(model, filter_by, order_by, limit, page)
+		return make_page(model, filter_by, order_by, limit, page, compute_count)
 
 	@classmethod
 	def make_tree(model, filter_by=None, order_by=None, id_col='id', parentid_col='parentid', children_col='children', show_cols=None):
@@ -88,5 +94,5 @@ class BaseModel:
 			show_cols = model().keys()
 
 		# 获取所有数据
-		data = model.make_page(filter_by=filter_by, order_by=order_by, page=None)
+		count, data = model.make_page(filter_by=filter_by, order_by=order_by, page=None, compute_count=False)
 		return list_to_tree(data, id_col, parentid_col, children_col, show_cols)

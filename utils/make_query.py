@@ -1,10 +1,9 @@
 from re import split as re_split
 from datetime import date, datetime
 
-def make_page(model, filter_by=None, order_by=None, limit=20, page=1):
+def make_page(model, filter_by=None, order_by=None, limit=20, page=1, compute_count=False):
 
 	selector = model.objects
-	filter_by_pattern = 'selector.filter_by({field}={value})'
 
 	filter_by_kwargs = {}
 	order_by_args = []
@@ -43,9 +42,11 @@ def make_page(model, filter_by=None, order_by=None, limit=20, page=1):
 	if not filter_by and not order_by:
 		selector = selector.all()
 
+	count = len(selector) if compute_count else 0
+
 	# 开启分页
 	if page and limit:
 		page, limit = int(page), int(limit)
 		selector = selector[(page-1)*limit:page*limit]
 
-	return selector
+	return count, selector
