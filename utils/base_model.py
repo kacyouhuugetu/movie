@@ -43,6 +43,13 @@ class BaseModel:
 		keys = self.keys()
 		return tuple((key, self.get(key)) for key in keys)
 
+	def to_dict(self):
+		"""
+			返回字段和字段的值组成的字典
+		"""
+		keys = self.keys()
+		return dict((key, self.get(key)) for key in keys)
+
 	def __iter__(self):
 		"""
 			返回迭代器
@@ -50,9 +57,12 @@ class BaseModel:
 		self.__load_fields()
 		return iter(self.__fields)
 
+	def __str__(self):
+		return self.to_dict().__str__()
+
 
 	@classmethod
-	def make_page(model, filter_by=None, order_by=None, limit=20, page=1, compute_count=False):	
+	def make_page(model, filter_by=None, order_by=None, limit=20, page=1, compute_count=False, to_serializable=True):	
 		"""
 			以模型DoubanMovie为例，获取满足条件的影片QuerySet
 			
@@ -67,7 +77,9 @@ class BaseModel:
 				:page
 					整数。用于分页，与参数limit一起使用，表示页码。若page为None，则不开启分页。默认为1
 				:compute_count
-					布尔值。是否计算数据量
+					布尔值。是否计算数据量，默认为False
+				:to_serializable
+					布尔值。表示是否将结果序列化，方便JsonResponse，默认为True
 
 			
 			返回值
@@ -75,7 +87,7 @@ class BaseModel:
 				:count
 					经过筛选后的数据量（与是否开启分页无关）。若compute_count为False，则该返回值为0
 				:data
-					表示结果集的QuerySet
+					若参数to_serializable为True，data为列表套字典。否则为结果集的QuerySet
 
 			示例
 			_______

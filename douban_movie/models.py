@@ -5,7 +5,7 @@ from utils.make_query import make_page
 from utils.base_model import BaseModel
 
 # Create your models here.
-class DoubanMovie(models.Model, BaseModel):
+class DoubanMovie(BaseModel, models.Model):
 
 	id = models.CharField(_('主键ID'), max_length=32, primary_key=True, blank=False)
 	douban_movie_id = models.CharField(_('豆瓣电影ID'), max_length=100, blank=False, default='')
@@ -27,7 +27,5 @@ class DoubanMovie(models.Model, BaseModel):
 	class Meta:
 		db_table = 't_douban_movie'
 
-	def __str__(self):
-		return '%s(%d,%d)'%(self.title, self.rate, self.votes)
 
 

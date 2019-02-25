@@ -1,11 +1,12 @@
 from re import split as re_split
 from datetime import date, datetime
 
-def make_page(model, filter_by=None, order_by=None, limit=20, page=1, compute_count=False):
+def make_page(model, filter_by=None, order_by=None, limit=20, page=1, compute_count=False, to_serializable=True):
 
 	selector = model.objects
 
 	filter_by_kwargs = {}
+	exclude_kwargs = {}
 	order_by_args = []
 
 	if filter_by:
@@ -25,9 +26,15 @@ def make_page(model, filter_by=None, order_by=None, limit=20, page=1, compute_co
 
 			value = eval(value)
 
-			filter_by_kwargs[field+suffix] = value
+			if field[0] == '~':
+				exclude_kwargs[field[1:]+suffix] = value
+			else:
+				filter_by_kwargs[field+suffix] = value
 
-		selector = selector.filter(**filter_by_kwargs)
+		if filter_by_kwargs:
+			selector = selector.filter(**filter_by_kwargs)
+		if exclude_kwargs:
+			selector = selector.exclude(**exclude_kwargs)
 
 	if order_by:
 		for field_direction in order_by.split(','):
@@ -49,4 +56,11 @@ def make_page(model, filter_by=None, order_by=None, limit=20, page=1, compute_co
 		page, limit = int(page), int(limit)
 		selector = selector[(page-1)*limit:page*limit]
 
-	return count, selector
+	data = []
+	if to_serializable:
+		for item in selector:
+			data.append(item.to_dict())
+	else:
+		data = selector
+
+	return count, data
