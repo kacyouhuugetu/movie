@@ -3,36 +3,31 @@
 {% block title %}首页{% endblock %}
 
 {% block body %}
-<div id="carouselHotMovie" class="carousel slide" data-ride="carousel">
+{% load douban_movie_tags %}
+
+<div id="carouselHotMovie" class="carousel slide" data-ride="carousel">		
 	<ol class="carousel-indicators">
-		<li data-target="#carouselHotMovie" data-slide-to="0" class="active"></li>
-		<li data-target="#carouselHotMovie" data-slide-to="1"></li>
+		{% for movie in movies %}
+			<li data-target="#carouselHotMovie" data-slide-to={{ forloop.counter0 }} {% if forloop.first %}class="active"{% endif %}></li>
+		{% endfor %}
 	</ol>
 	<div class="carousel-inner">
-		<div class="carousel-item active" style="height: 80vh;background-color: #343a40">
-			<div class="container">
-				<div class="row">
-					<div class="col col-md-6">
-						简介
-					</div>
-					<div class="col col-md-6">
-						图片
-					</div>
-				</div>
-			</div>
-		</div>
-		<div class="carousel-item" style="height: 80vh;background-color: #343a40">
-			<div class="container">
-				<div class="row">
-					<div class="col col-md-6">
-						简介
-					</div>
-					<div class="col col-md-6">
-						图片
+		{% if movies %}
+			{% for movie in movies %}
+				<div class="carousel-item {% if forloop.first %}active{% endif %}" style="height: 80vh;background-color: #343a40">
+					<div class="container">
+						<div class="row">
+							<div class="col col-md-6">
+								{{movie.summary|linebreaks}}
+							</div>
+							<div class="col col-md-6">
+								<img src="https://images.weserv.nl/?url={{ movie.cover|replace:'http://'|replace:'https://' }}">
+							</div>
+						</div>
 					</div>
 				</div>
-			</div>
-		</div>
+			{% endfor %}
+		{% endif %}
 	</div>
 	<a class="carousel-control-prev" href="#carouselHotMovie" role="button" data-slide="prev">
 		<span class="carousel-control-prev-icon" aria-hidden="true"></span>
