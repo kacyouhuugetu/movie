@@ -15,11 +15,15 @@ Including another URLconf
 """
 
 from django.urls import path
-from douban_movie.views import index
+from douban_movie.views import index, movie_detail, search_movie, to_search_list
 
 app_name = 'douban_movie'
 
 urlpatterns = [
-	path('', index, name='index')
+	path('', index, name='index'),
+	path('movie_detail', movie_detail, name='movie_detail'),
+	path('movie_detail/<str:id>', movie_detail, name='movie_detail'),
+	path('search_movie', search_movie, name='search_movie'),
+	path('to_search_list', to_search_list, name='to_search_list'),
 
 ]

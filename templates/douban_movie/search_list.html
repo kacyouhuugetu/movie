@@ -1,0 +1,55 @@
+{% extends 'douban_movie/template.html' %}
+
+{% block title %}{{search_key}}{% endblock %}
+
+{% block body %}
+	{{ block.super }}
+	<div id="movie_list">
+		
+	</div>
+
+
+	<script type="text/html" id="generate_movie_list">
+		
+		<%	for(var index=0;index<movies.length;index++){ %>
+				<div class="movie-info" onclick="to_movie_detail('<%= movies[index].id %>')">
+					<div class="movie-title">
+						<p>标题：<%= movies[index].title %></p>
+					</div>
+					<div class="movie-type">
+						<p>类型：<%= movies[index].type %></p>
+					</div>
+					<div class="movie-rate">
+						<p>评分：<%= movies[index].rate %></p>
+					</div>
+					<div class="movie-votes">
+						<p>评分人数：<%= movies[index].votes %></p>
+					</div>
+					<div class="movie-actors">
+						<p>演员：<%= movies[index].actors %></p>
+					</div>
+					<div class="movie-summary">
+						<p>简介：<%= movies[index].summary %></p>
+					</div>
+				</div>
+		<%	} %>
+	</script>
+
+	<script type="text/javascript">
+		$(function(){
+
+			result = search_movie();
+
+			if(result.flag == 'SUCCESS'){
+				var movie_list_html = template('generate_movie_list', {'movies':result.data});
+
+				$('#movie_list').append(movie_list_html);
+
+			}
+			else{
+				show_message(result.msg, 2000);
+			}
+		});
+	</script>
+
+{% endblock %}

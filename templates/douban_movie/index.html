@@ -1,8 +1,10 @@
-{% extends 'common/template.html' %}
+{% extends 'douban_movie/template.html' %}
 
 {% block title %}首页{% endblock %}
 
+
 {% block body %}
+{{ block.super }}
 {% load douban_movie_tags %}
 
 <div id="carouselHotMovie" class="carousel slide" data-ride="carousel">		
@@ -14,13 +16,23 @@
 	<div class="carousel-inner">
 		{% if movies %}
 			{% for movie in movies %}
-				<div class="carousel-item {% if forloop.first %}active{% endif %}" style="height: 80vh;background-color: #343a40">
+				<div class="carousel-item {% if forloop.first %}active{% endif %}">
 					<div class="container">
-						<div class="row">
-							<div class="col col-md-6">
-								{{movie.summary|linebreaks}}
+						<div class="row movie-info">
+							<div class="col col-md-8">
+								<h1 class="movie-title">{{movie.title}}</h1>
+								<div class="movie-summary">
+									<span class="movie-summary-leading ion-md-quote"></span>
+									<div class="movie-summary-paragraph-container">
+										{% for summary_paragraph in movie.summary|split:'\n' %}
+											<p class="movie-summary-paragraph">
+												{{summary_paragraph}}
+											</p>
+										{% endfor %}
+									</div>
+								</div>
 							</div>
-							<div class="col col-md-6">
+							<div class="movie-cover col col-md-4" onclick="window.location.href='{% url 'douban_movie:movie_detail' movie.id %}'">
 								<img src="https://images.weserv.nl/?url={{ movie.cover|replace:'http://'|replace:'https://' }}">
 							</div>
 						</div>
@@ -29,11 +41,11 @@
 			{% endfor %}
 		{% endif %}
 	</div>
-	<a class="carousel-control-prev" href="#carouselHotMovie" role="button" data-slide="prev">
+	<a class="carousel-control-prev col col-md-1" href="#carouselHotMovie" role="button" data-slide="prev">
 		<span class="carousel-control-prev-icon" aria-hidden="true"></span>
 		<span class="sr-only">上一个</span>
 	</a>
-	<a class="carousel-control-next" href="#carouselHotMovie" role="button" data-slide="next">
+	<a class="carousel-control-next col col-md-1" href="#carouselHotMovie" role="button" data-slide="next">
 		<span class="carousel-control-next-icon" aria-hidden="true"></span>
 		<span class="sr-only">下一个</span>
 	</a>

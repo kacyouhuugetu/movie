@@ -61,15 +61,3 @@ function verify_email_address(string, require){
 	
 }
 
-
-function show_message(message, time, end){
-	if(!time){
-		time = 2000;
-	}
-
-	open_modal({
-		body : message,
-		time : time,
-		close : end
-	});
-}

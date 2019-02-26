@@ -1,0 +1,33 @@
+
+#carouselHotMovie .carousel-inner .carousel-item{
+	height: 70vh;
+	background-color: #343a40;
+}
+
+#carouselHotMovie .carousel-inner .movie-info .movie-summary{
+	color: #cecccc;
+}
+
+
+#carouselHotMovie .carousel-inner .movie-info .movie-title{
+	color: white;
+}
+
+#carouselHotMovie .carousel-inner .movie-info .movie-summary .movie-summary-paragraph-container{
+	text-indent: 2em;
+}
+
+
+#carouselHotMovie .carousel-inner .movie-info .movie-summary .movie-summary-leading{
+	font-size: 40px;
+}
+
+#carouselHotMovie .carousel-inner .movie-info .movie-cover{
+	cursor: pointer;
+}
+
+
+#movie_list .movie-info{
+	cursor: pointer;
+	background-color: gray;
+}

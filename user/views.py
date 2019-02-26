@@ -10,7 +10,7 @@ from user.decorators import check_login
 
 from re import compile, match
 
-main_page_url = 'douban_movie:test'
+main_page_url = 'douban_movie:index'
 
 # Create your views here.
 @check_login(False, main_page_url)

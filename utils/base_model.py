@@ -62,14 +62,14 @@ class BaseModel:
 
 
 	@classmethod
-	def make_page(model, filter_by=None, order_by=None, limit=20, page=1, compute_count=False, to_serializable=True):	
+	def make_page(model, filter_by=None, order_by=None, limit=20, page=1, compute_count=False, to_serializable=True, show_cols=None):	
 		"""
 			以模型DoubanMovie为例，获取满足条件的影片QuerySet
 			
 			参数
 			_______
 				:filter_by
-					表示筛选条件的字符串。多个筛选条件之间用&&分割。筛选条件的格式为field op value，其中field表示字段名，op表示操作符，value为值
+					表示筛选条件的字符串。多个筛选条件之间用&&或||分割。筛选条件的格式为field op value，其中field表示字段名，op表示操作符，value为值
 				:order_by
 					表示排序方法的字符串。多个排序方法之间用,分割。排序方法的格式为field direction，其中direction表示排序方向，asc表示正序，desc表示倒序，若不给出则默认为正序
 				:limit
@@ -80,7 +80,8 @@ class BaseModel:
 					布尔值。是否计算数据量，默认为False
 				:to_serializable
 					布尔值。表示是否将结果序列化，方便JsonResponse，默认为True
-
+				:show_cols
+					序列。表示要返回的字段，默认为None，即返回所有字段
 			
 			返回值
 			_______
@@ -98,7 +99,7 @@ class BaseModel:
 
 		"""
 
-		return make_page(model, filter_by, order_by, limit, page, compute_count)
+		return make_page(model, filter_by, order_by, limit, page, compute_count, to_serializable, show_cols)
 
 	@classmethod
 	def make_tree(model, filter_by=None, order_by=None, id_col='id', parentid_col='parentid', children_col='children', show_cols=None):
@@ -106,5 +107,5 @@ class BaseModel:
 			show_cols = model().keys()
 
 		# 获取所有数据
-		count, data = model.make_page(filter_by=filter_by, order_by=order_by, page=None, compute_count=False)
+		count, data = model.make_page(filter_by=filter_by, order_by=order_by, page=None, compute_count=False, show_cols=show_cols)
 		return list_to_tree(data, id_col, parentid_col, children_col, show_cols)

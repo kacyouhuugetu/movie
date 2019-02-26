@@ -1,0 +1,16 @@
+{% extends 'common/template.html' %}
+
+{% block head %}
+	{% load staticfiles%}
+	<link rel="stylesheet" type="text/css" href="{% static 'css/douban_movie/index.css' %}">
+	<script type="text/javascript" src="{% static 'js/douban_movie/index.js' %}"></script>
+
+{% endblock %}
+	
+
+{% block body %}
+	<input type="hidden" id="douban_movie_index_url" value="{% url 'douban_movie:index' %}">
+	<input type="hidden" id="douban_movie_movie_detail_url" value="{% url 'douban_movie:movie_detail' %}">
+	<input type="hidden" id="douban_movie_to_search_list_url" value="{% url 'douban_movie:to_search_list' %}">
+	<input type="hidden" id="douban_movie_search_movie_url" value="{% url 'douban_movie:search_movie' %}">
+{% endblock %}

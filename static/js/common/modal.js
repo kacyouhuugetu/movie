@@ -69,3 +69,16 @@ function close_modal(modal_id){
 	})
 
 }
+
+
+function show_message(message, time, end){
+	if(!time){
+		time = 2000;
+	}
+
+	open_modal({
+		body : message,
+		time : time,
+		close : end
+	});
+}

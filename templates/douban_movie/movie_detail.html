@@ -1,0 +1,15 @@
+{% extends 'douban_movie/template.html' %}
+
+{% block title %}{{movie.title}}{% endblock %}
+
+
+{% block body %}
+	{{ block.super }}
+	{% load douban_movie_tags %}
+
+	{% for field,value in movie.items %}
+		<p>{{field}}:{{value}}</p>
+	{% endfor %}
+
+
+{% endblock %}

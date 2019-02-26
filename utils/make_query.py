@@ -1,16 +1,22 @@
 from re import split as re_split
 from datetime import date, datetime
+from django.db.models import Q
 
-def make_page(model, filter_by=None, order_by=None, limit=20, page=1, compute_count=False, to_serializable=True):
+def make_page(model, filter_by=None, order_by=None, limit=20, page=1, compute_count=False, to_serializable=True, show_cols=None):
 
 	selector = model.objects
+
 
 	filter_by_kwargs = {}
 	exclude_kwargs = {}
 	order_by_args = []
 
 	if filter_by:
-		for field_op_value in filter_by.split('&&'):
+
+		splitor = '&&' if '&&' in filter_by else '||'
+
+		Qs = []
+		for field_op_value in filter_by.split(splitor):
 
 			field, op, value = [ele.strip() for ele in re_split(r'\s+', field_op_value.strip(), maxsplit=2)]
 			suffix = '' if op in ('=','==') else \
@@ -27,14 +33,19 @@ def make_page(model, filter_by=None, order_by=None, limit=20, page=1, compute_co
 			value = eval(value)
 
 			if field[0] == '~':
-				exclude_kwargs[field[1:]+suffix] = value
+				Qs.append(~Q(**{field[1:]+suffix:value}))
 			else:
-				filter_by_kwargs[field+suffix] = value
+				Qs.append(Q(**{field+suffix:value}))
 
-		if filter_by_kwargs:
-			selector = selector.filter(**filter_by_kwargs)
-		if exclude_kwargs:
-			selector = selector.exclude(**exclude_kwargs)
+		final_Q = Qs[0]
+		for Q_ in Qs[1:]:
+			if splitor == '&&':
+				final_Q = final_Q & Q_
+			else:
+				final_Q = final_Q | Q_
+
+		selector = selector.filter(final_Q)
+
 
 	if order_by:
 		for field_direction in order_by.split(','):
@@ -45,6 +56,9 @@ def make_page(model, filter_by=None, order_by=None, limit=20, page=1, compute_co
 			order_by_args.append(direction + field)
 
 		selector = selector.order_by(*order_by_args)
+
+	if not show_cols is None:
+		selector = selector.values(*show_cols)
 
 	if not filter_by and not order_by:
 		selector = selector.all()
@@ -59,7 +73,7 @@ def make_page(model, filter_by=None, order_by=None, limit=20, page=1, compute_co
 	data = []
 	if to_serializable:
 		for item in selector:
-			data.append(item.to_dict())
+			data.append(item if type(item)==dict else item.to_dict())
 	else:
 		data = selector
 

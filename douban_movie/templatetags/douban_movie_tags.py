@@ -6,6 +6,8 @@ register = template.Library()
 @register.filter
 @stringfilter
 def split(value, arg):
+	if arg == r'\n':
+		arg = '\n'
 	return value.split(arg)
 
 @register.filter
@@ -15,4 +17,11 @@ def replace(value, arg):
 	new = '' if len(new)==0 else new[0]
 
 	return value.replace(old, new)
+
+@register.filter
+@stringfilter
+def linebreaker(value):
+
+	return value.replace('\n', '<br/>')
+
 
