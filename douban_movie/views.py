@@ -8,6 +8,7 @@ from datetime import date
 
 # Create your views here.
 
+@check_login()
 @require_GET
 def index(request):
 
@@ -49,40 +50,31 @@ def to_search_list(request):
 
 	search_key = request.GET.get('search_key', '')
 
-	if not search_key:
-		raise Http404('搜索关键字必须非空')
+	context = {'search_key' : search_key} if search_key else None
 
-	return render(request, 'douban_movie/search_list.html', {'search_key' : search_key})
+	return render(request, 'douban_movie/search_list.html', context)
 
-
+@require_GET
 def search_movie(request):
 	args = request.GET
 	search_key = args.get('search_key', '')
-	page = args.get('page', '')
-	limit = args.get('limit', '')
+	page = int(args.get('page', 1))
+	limit = int(args.get('limit', 20))
 	order_by = args.get('order_by', 'release_date desc')
-	compute_count = args.get('compute_count', False)
 
-	if not search_key:
-		return JsonResponse({
-			'flag' : 'FAIL',
-			'msg' : '请输入搜索关键字'
-		}, json_dumps_params={'ensure_ascii':False})
+	filter_by = 'title contains "{search_key}" || actors contains "{search_key}"'.format(search_key=search_key) if search_key else None
 
-	try:
-		filter_by = 'title contains "{search_key}" || actors contains "{search_key}"'.format(search_key=search_key)
-		count, data = DoubanMovie.make_page(filter_by, order_by, page=page, limit=limit, compute_count=compute_count)
+	count, data = DoubanMovie.make_page(filter_by, order_by, page=page, limit=limit, to_serializable=True, compute_count=True)
 
-	except:
-		return JsonResponse({
-			'flag' : 'FAIL',
-			'msg' : '未知错误'
-		}, json_dumps_params={'ensure_ascii':False})
+	types, langs = DoubanMovie.get_conditions(search_key)
 
-	return JsonResponse({
-		'flag' : 'SUCCESS',
-		'msg' : '',
-		'count' : count,
-		'data' : data
-	}, json_dumps_params={'ensure_ascii':False})
-
+	context = {
+		'npage' : count//limit + (1 if count%limit!=0 else 0),
+		'page' : page,
+		'movies' : data,
+		'conditions' : {
+			'types' : types,
+			'langs' : langs
+		}
+	}
+	return render(request, 'douban_movie/search_list.html', context)

@@ -2,54 +2,68 @@
 
 {% block title %}{{search_key}}{% endblock %}
 
+
 {% block body %}
+	{% load douban_movie_tags %}
 	{{ block.super }}
-	<div id="movie_list">
-		
+
+	<div id="conditions">
+		<div class="condition-type">
+			{% for type,count in conditions.types %}
+				<a class="conditions-type-tag" href="#">{{type}}</a>
+			{% endfor %}
+		</div>
+		<div class="condition-lang">
+			{% for lang,count in conditions.langs %}
+				<a class="conditions-lang-tag" href="#">{{lang}}</a>
+			{% endfor %}
+		</div>
 	</div>
 
-
-	<script type="text/html" id="generate_movie_list">
-		
-		<%	for(var index=0;index<movies.length;index++){ %>
-				<div class="movie-info" onclick="to_movie_detail('<%= movies[index].id %>')">
-					<div class="movie-title">
-						<p>标题：<%= movies[index].title %></p>
-					</div>
-					<div class="movie-type">
-						<p>类型：<%= movies[index].type %></p>
-					</div>
-					<div class="movie-rate">
-						<p>评分：<%= movies[index].rate %></p>
-					</div>
-					<div class="movie-votes">
-						<p>评分人数：<%= movies[index].votes %></p>
-					</div>
-					<div class="movie-actors">
-						<p>演员：<%= movies[index].actors %></p>
-					</div>
-					<div class="movie-summary">
-						<p>简介：<%= movies[index].summary %></p>
-					</div>
+	<div id="movie_list">
+		{% for movie in movies %}
+			<div class="movie-info" onclick="to_movie_detail('{{movie.id}}')">
+				<div class="movie-title">
+					<p>标题：{{movie.title}}</p>
 				</div>
-		<%	} %>
-	</script>
+				<div class="movie-type">
+					<p>类型：{{movie.type}}</p>
+				</div>
+				<div class="movie-rate">
+					<p>评分：{{movie.rate}}</p>
+				</div>
+				<div class="movie-votes">
+					<p>评分人数：{{movie.votes}}</p>
+				</div>
+				<div class="movie-actors">
+					<p>演员：{{movie.actors}}</p>
+				</div>
+				<div class="movie-summary">
+					<p>简介：{{movie.summary}}</p>
+				</div>
+			</div>
 
-	<script type="text/javascript">
-		$(function(){
+		{% endfor %}
+	</div>
 
-			result = search_movie();
+	<div class="pagination-container">
+		<nav>
+			<ul class="pagination">
+				<li class="page-item disabled">
+					<a class="page-link" href="#" tabindex="-1" aria-disabled="true">Previous</a>
+				</li>
+				{% for i in npage|myrange %}
+					{% if page == i+1 %}
+					{% else %}
+						<li class="page-item"><a class="page-link" href="#">{{i|add:1}}</a></li>
+					{% endif %}
+				{%  endfor %}
+				<li class="page-item">
+					<a class="page-link" href="#">Next</a>
+				</li>
+			</ul>
+		</nav>
+	</div>
 
-			if(result.flag == 'SUCCESS'){
-				var movie_list_html = template('generate_movie_list', {'movies':result.data});
-
-				$('#movie_list').append(movie_list_html);
-
-			}
-			else{
-				show_message(result.msg, 2000);
-			}
-		});
-	</script>
 
 {% endblock %}

@@ -9,9 +9,9 @@
 		<ul class="navbar-nav mr-auto" id="navigation">
 
 		</ul>
-		<form class="form-inline my-2 my-lg-0" id="search_movie_form" action="{% url 'douban_movie:to_search_list' %}" method="get">
+		<form class="form-inline my-2 my-lg-0" id="search_movie_form" action="{% url 'douban_movie:search_movie' %}" method="get">
 			<input class="form-control mr-sm-2" type="search" name="search_key" value="{{search_key}}" placeholder="{% if search_key %}{{search_key}}{% else %}搜索影片{% endif %}" aria-label="Search">
-			<button class="btn btn-outline-success my-2 my-sm-0" type="submit" style="border: 0px" onclick="to_search_list()">
+			<button class="btn btn-outline-success my-2 my-sm-0" type="submit" style="border: 0px" onclick="search_movie()">
 				<span class="oi oi-magnifying-glass"></span>
 			</button>
 		</form>

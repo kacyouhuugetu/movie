@@ -27,5 +27,11 @@ class DoubanMovie(BaseModel, models.Model):
 	class Meta:
 		db_table = 't_douban_movie'
 
+	def get_conditions(search_key=''):
 
+		filter_by = 'title contains "{search_key}" || actors contains "{search_key}"'.format(search_key=search_key) if search_key else ''
 
+		types = DoubanMovie.get_distinct_with_split('type', '/', filter_by=filter_by, compute_count=True, return_sorted_list=True)
+		langs = DoubanMovie.get_distinct_with_split('lang', '/', filter_by=filter_by, compute_count=True, return_sorted_list=True)
+
+		return types, langs

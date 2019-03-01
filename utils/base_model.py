@@ -1,7 +1,9 @@
 from django.core.exceptions import FieldDoesNotExist
 
-from utils.make_query import make_page
+from utils.make_query import make_page, get_distinct
 from utils.common import list_to_tree
+
+from operator import itemgetter
 
 class BaseModel:
 	"""
@@ -109,3 +111,36 @@ class BaseModel:
 		# 获取所有数据
 		count, data = model.make_page(filter_by=filter_by, order_by=order_by, page=None, compute_count=False, show_cols=show_cols)
 		return list_to_tree(data, id_col, parentid_col, children_col, show_cols)
+
+	@classmethod
+	def get_distinct(model, col, filter_by=None, compute_count=False):
+		
+		return get_distinct(model, col, filter_by, compute_count)
+
+
+	@classmethod
+	def get_distinct_with_split(model, col, splitor=',', filter_by=None, compute_count=False, strip=True, return_sorted_list=False):
+		
+		res = model.get_distinct(col, filter_by, compute_count)
+
+		value_dict = {}
+		for item in res:
+
+			for value in item.get(col).split(splitor):
+				
+				if strip:
+					value = value.strip()
+
+				if value:
+					if not value in value_dict:
+						value_dict[value] = 0
+
+					value_dict[value] += item.get('count', 1)
+
+		if return_sorted_list:
+			return sorted(value_dict.items(), key=itemgetter(1), reverse=True)
+
+		else:
+			return value_dict
+
+

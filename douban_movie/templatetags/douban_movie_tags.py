@@ -25,3 +25,7 @@ def linebreaker(value):
 	return value.replace('\n', '<br/>')
 
 
+@register.filter
+def myrange(value, start=0):
+
+	return list(range(int(start), int(value)))

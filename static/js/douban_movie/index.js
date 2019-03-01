@@ -1,4 +1,6 @@
-function search_movie(search_key){
+
+
+function get_conditions(search_key){
 
 	if(search_key){
 		$('#search_movie_form').find('name=[search_key]').val(search_key);
@@ -9,7 +11,7 @@ function search_movie(search_key){
 	$.ajax({
 		async : false,
 		type : 'get',
-		url : $('#douban_movie_search_movie_url').val(),
+		url : $('#douban_movie_get_conditions_url').val(),
 		dataType : 'json',
 		data : $('#search_movie_form').serialize(),
 		success : function(data){
@@ -20,6 +22,7 @@ function search_movie(search_key){
 	return result;
 
 }
+
 
 function to_movie_detail(id){
 	window.location.href = $('#douban_movie_movie_detail_url').val() + '/' + id;

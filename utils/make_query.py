@@ -1,14 +1,13 @@
 from re import split as re_split
 from datetime import date, datetime
+
 from django.db.models import Q
+from django.db.utils import NotSupportedError
+from django.db.models import Count
 
-def make_page(model, filter_by=None, order_by=None, limit=20, page=1, compute_count=False, to_serializable=True, show_cols=None):
-
+def make_selector(model, filter_by=None, order_by=None):
 	selector = model.objects
 
-
-	filter_by_kwargs = {}
-	exclude_kwargs = {}
 	order_by_args = []
 
 	if filter_by:
@@ -57,6 +56,13 @@ def make_page(model, filter_by=None, order_by=None, limit=20, page=1, compute_co
 
 		selector = selector.order_by(*order_by_args)
 
+	return selector
+
+
+def make_page(model, filter_by=None, order_by=None, limit=20, page=1, compute_count=False, to_serializable=True, show_cols=None):
+
+	selector = make_selector(model, filter_by, order_by)
+
 	if not show_cols is None:
 		selector = selector.values(*show_cols)
 
@@ -78,3 +84,15 @@ def make_page(model, filter_by=None, order_by=None, limit=20, page=1, compute_co
 		data = selector
 
 	return count, data
+
+
+def get_distinct(model, col, filter_by=None, compute_count=False):
+	
+	selector = make_selector(model, filter_by).values(col)
+
+	if compute_count:
+		res = selector.annotate(count = Count(col))
+	else:
+		res =  selector.distinct()
+
+	return res
